@@ -1,0 +1,55 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile, stat } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { readConfig } from '../src/config.mjs';
+import { allPages } from '../src/site.mjs';
+const config=readConfig({});
+const pages=allPages(config);
+const map=new Map(pages.map(p=>[p.path,p.html]));
+const attribute=(html,pattern)=>[...html.matchAll(pattern)].map(m=>m[1]);
+test('every page has unique metadata, one h1, and valid structured data',()=>{
+  const titles=new Set(), descriptions=new Set();
+  for(const {path,html} of pages){
+    assert.equal((html.match(/<h1>/g)||[]).length,1,path);
+    const title=html.match(/<title>(.*?)<\/title>/s)[1];
+    const description=html.match(/name="description" content="([^"]+)"/)[1];
+    assert(!titles.has(title));titles.add(title);
+    assert(!descriptions.has(description));descriptions.add(description);
+    assert(html.includes(`rel="canonical" href="https://knowdexia.com${path}"`),path);
+    assert(html.includes('property="og:image" content="https://knowdexia.com/og.png"'));
+    assert.equal(JSON.parse(html.match(/application\/ld\+json">(.*?)<\/script>/s)[1])['@type'],'WebSite');
+  }
+});
+test('internal links, hash targets, assets, and aria control targets resolve',async()=>{
+  for(const {path,html} of pages){
+    const ids=attribute(html,/\bid="([^"]+)"/g);
+    assert.equal(ids.length,new Set(ids).size,`Duplicate id on ${path}`);
+    for(const target of attribute(html,/aria-controls="([^"]+)"/g)) assert(ids.includes(target),`${path}: ${target}`);
+    for(const ref of attribute(html,/(?:href|src)="([^"]+)"/g)){
+      if(!ref.startsWith('/')&&!ref.startsWith('#')) continue;
+      const url=new URL(ref,`https://knowdexia.com${path}`);
+      const target=map.get(url.pathname);
+      if(target){if(url.hash) assert(target.includes(`id="${url.hash.slice(1)}"`),`${path}: ${ref}`);}
+      else assert((await stat(resolve('public',url.pathname.slice(1)))).isFile(),`${path}: ${ref}`);
+    }
+  }
+});
+test('application URL config is safe, centralized, and release-gated',()=>{
+  assert.equal(readConfig({}).appUrl,'/get-started');
+  assert.throws(()=>readConfig({APP_URL:'javascript:alert(1)'}));
+  assert.throws(()=>readConfig({RELEASE:'true'}));
+  const custom=readConfig({APP_URL:'https://app.example.test/start?a=1&b=2',RELEASE:'true',LEGAL_APPROVED:'true'});
+  const home=allPages(custom)[0].html;
+  assert(home.includes('href="https://app.example.test/start?a=1&amp;b=2"'));
+  assert(!home.includes('href="/get-started">Try Knowdexia'));
+});
+test('sitemap includes only public indexable routes and robots points to it',async()=>{
+  const sitemap=await readFile('dist/sitemap.xml','utf8');
+  for(const {path} of pages){
+    if(['/privacy','/terms','/get-started','/404'].includes(path)) assert(!sitemap.includes(`<loc>https://knowdexia.com${path}</loc>`));
+    else assert(sitemap.includes(`<loc>https://knowdexia.com${path}</loc>`));
+  }
+  assert((await readFile('dist/robots.txt','utf8')).includes('Sitemap: https://knowdexia.com/sitemap.xml'));
+  for(const path of ['/privacy','/terms','/404','/get-started']) assert(map.get(path).includes('content="noindex, follow"'));
+});
