@@ -5,3 +5,5 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 @media(max-width:720px){.header-inner{flex-wrap:nowrap;gap:8px}.header .brand{font-size:18px;gap:7px}.header .brand-mark{width:25px;height:27px;font-size:19px}.header>.container>.button{font-size:10px;padding:10px 9px;gap:6px;white-space:nowrap}.menu-button{font-size:0;width:36px;flex-shrink:0;padding:7px}.menu-button span{font-size:16px}.header nav{top:72px}}
+.feature-grid>*,.evidence-grid>*,.split>*,.availability>*{min-width:0}
+@media(max-width:380px){.evidence-flow{font-size:21px;gap:10px}.evidence-flow em{font-size:25px}.rag-result{gap:7px;font-size:10px}.rag-result b{font-size:9px}.collection-title{flex-wrap:wrap}.collection-title>span:last-child{margin-left:35px}.hero-actions .button{gap:7px;padding:12px;font-size:11px}}
