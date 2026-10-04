@@ -7,3 +7,24 @@
 @media(max-width:720px){.header-inner{flex-wrap:nowrap;gap:8px}.header .brand{font-size:18px;gap:7px}.header .brand-mark{width:25px;height:27px;font-size:19px}.header>.container>.button{font-size:10px;padding:10px 9px;gap:6px;white-space:nowrap}.menu-button{font-size:0;width:36px;flex-shrink:0;padding:7px}.menu-button span{font-size:16px}.header nav{top:72px}}
 .feature-grid>*,.evidence-grid>*,.split>*,.availability>*{min-width:0}
 @media(max-width:380px){.evidence-flow{font-size:21px;gap:10px}.evidence-flow em{font-size:25px}.rag-result{gap:7px;font-size:10px}.rag-result b{font-size:9px}.collection-title{flex-wrap:wrap}.collection-title>span:last-child{margin-left:35px}.hero-actions .button{gap:7px;padding:12px;font-size:11px}}
+.workspace-sidebar button.sidebar-item{width:100%;text-align:left;background:none;border:0;min-height:40px;align-items:center}
+.sidebar-item[aria-pressed=true]{background:#eaf0ff;color:var(--blue);font-weight:600}
+.sidebar-item:hover{color:var(--blue)}
+.scope-list{display:flex;flex-direction:column;gap:5px}
+.query input{flex:1;min-width:0;border:0;background:none;font:inherit;color:var(--ink);padding:4px 0}
+.query input:focus-visible{outline:none}
+.query:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px #315bda22}
+.query-arrow{background:none;border:0;min-width:32px;min-height:32px}
+.suggestions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.suggestions button{font-size:10px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 11px;min-height:34px;color:var(--muted)}
+.suggestions button:hover,.suggestions button[aria-pressed=true]{border-color:var(--blue);color:var(--blue)}
+.suggestions button[aria-pressed=true]{background:#f4f7ff}
+.retrieval{padding-top:16px}
+.source-preview[hidden]{display:none}
+@media(max-width:720px){
+.workspace-sidebar{display:block;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line)}
+.workspace-sidebar>.tiny,.library-note{display:none}
+.scope-list{flex-direction:row;overflow-x:auto;gap:6px}
+.workspace-sidebar button.sidebar-item{width:auto;white-space:nowrap;border:1px solid var(--line);background:#fff;padding:8px 12px}
+.sidebar-item[aria-pressed=true]{border-color:var(--blue)}
+}

@@ -53,3 +53,23 @@ test('sitemap includes only public indexable routes and robots points to it',asy
   assert((await readFile('dist/robots.txt','utf8')).includes('Sitemap: https://knowdexia.com/sitemap.xml'));
   for(const path of ['/privacy','/terms','/404','/get-started']) assert(map.get(path).includes('content="noindex, follow"'));
 });
+test('demo data is consistent and matching is scoped',async()=>{
+  const {questions,documents,collections}=await import('../public/demo-data.js');
+  const {matchQuestion,questionsIn,renderAnswer}=await import('../public/demo-render.js');
+  const names=new Set(documents.map(d=>d.name));
+  for(const q of questions){
+    for(const s of q.sources) assert(names.has(s.doc),`${q.id}: unknown document ${s.doc}`);
+    for(const p of q.answer) assert(q.sources[p.cite],`${q.id}: citation ${p.cite} has no source`);
+    for(const scope of q.scopes) assert(collections.some(c=>c.id===scope),`${q.id}: unknown scope ${scope}`);
+  }
+  for(const c of collections) assert(questionsIn(c.id).length>0,`${c.id} has no questions`);
+  assert.equal(matchQuestion('release notes format','all').id,'release-notes');
+  assert.equal(matchQuestion('release notes format','market'),null);
+  assert.equal(matchQuestion('zzz qqq','all'),null);
+  assert(renderAnswer(null).includes('no passages'));
+});
+test('home page serves the interactive demo, default state included',()=>{
+  const html=map.get('/');
+  for(const id of ['demo-form','demo-query','demo-scopes','demo-suggestions','demo-answer','demo-tabs','source-preview']) assert(html.includes(`id="${id}"`),id);
+  assert(html.includes('<script type="module" src="/demo.js">'));
+});

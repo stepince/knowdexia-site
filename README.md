@@ -1,4 +1,4 @@
-# Knowdexia marketing website
+# knowdexia marketing website
 
 Separate, dependency-free static marketing site for https://knowdexia.com. The Knowdexia application is not modified or imported at build time.
 
@@ -32,11 +32,14 @@ No deployment or production domain change was performed.
 
 ## Structure
 
-- `src/site.mjs`: shared header/footer, homepage sections, interactive illustrative workspace markup, articles, supporting pages, metadata.
+- `src/site.mjs`: shared header/footer, homepage sections, interactive demo workspace shell, articles, supporting pages, metadata.
 - `src/content.mjs`: eight distinct search-intent pages.
 - `src/config.mjs`: centralized URL configuration and release validation.
 - `public/style.css`: responsive layout, focus indicators, reduced motion support.
-- `public/site.js`: mobile navigation and citation/source example. No API calls or document upload.
+- `public/site.js`: mobile navigation.
+- `public/demo-data.js`: illustrative collections, documents, questions, answers and source passages for the homepage demo. Edit this file to change the demo content.
+- `public/demo-render.js`: pure render and matching functions, shared by the build (default state, so the demo works before JavaScript loads) and the browser.
+- `public/demo.js`: client behavior for the demo (choose a collection, ask or pick a question, switch sources). No API calls or document upload.
 - `public/favicon.svg`: blue K mark adapted from the application's existing favicon.
 - `public/og.png`: committed 1200 × 630 social card; rebuilding the site does not need image tooling.
 - `scripts/create-og.py`: optional Pillow helper for regenerating the social card; the font paths target macOS.
