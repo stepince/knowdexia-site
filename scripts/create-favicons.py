@@ -1,4 +1,4 @@
-"""Generate favicon.ico and apple-touch-icon.png matching public/favicon.svg."""
+"""Generate favicon.ico and apple-touch-icon.png matching favicon.svg."""
 from PIL import Image, ImageDraw
 
 S = 1024  # supersampled canvas; SVG viewBox is 32 units
@@ -25,5 +25,5 @@ def icon(rounded=True):
     return im
 
 icon().resize((256, 256), Image.LANCZOS).save(
-    "public/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
-icon(rounded=False).resize((180, 180), Image.LANCZOS).convert("RGB").save("public/apple-touch-icon.png")
+    "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+icon(rounded=False).resize((180, 180), Image.LANCZOS).convert("RGB").save("apple-touch-icon.png")

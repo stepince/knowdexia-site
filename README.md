@@ -8,7 +8,7 @@ Requires Node 22+. No dependency installation is needed.
 
 ```sh
 npm run dev       # builds once, then serves http://localhost:4321
-npm run build     # writes the deployable site to docs/ (commit it)
+npm run build     # regenerates the HTML pages at the repo root (commit them)
 npm run preview   # serves the existing build
 npm test          # run after building: metadata, internal links/anchors/assets, config, sitemap
 npm run lint      # JavaScript syntax checks (no external linter)
@@ -26,7 +26,7 @@ Copy `.env.example` to `.env`, or supply environment variables when building.
 
 For a release build, use `RELEASE=true npm run build`. It requires an explicit application URL and `LEGAL_APPROVED=true`; the flag alone does not replace the legal draft text. The normal preview build allows unfinished configuration.
 
-The site deploys from `main` with GitHub Pages (Settings → Pages → Deploy from a branch → `main` / `/docs`). `docs/` is generated output: run `npm run build` and commit it before pushing. `public/CNAME` carries the custom domain and `.nojekyll` stops Jekyll processing. To use another static host, deploy `docs/` there. Configure the host to serve directory `index.html` files for clean routes and `404.html` with HTTP status 404 for missing routes. Do not use an SPA catch-all. Select one trailing-slash convention and redirect alternatives; the generated canonical URLs omit trailing slashes except the root. Connect the marketing domain separately from the application. Set HTML revalidation and appropriate caching/compression at the host. HTTPS, hosting, DNS, access logs, and actual policies are deployment responsibilities.
+The site deploys from `main` with GitHub Pages (Settings → Pages → Deploy from a branch → `main` / `/ (root)`), like the other Knowdexia-family sites. The generated pages (`index.html`, `404.html`, `about/`, the topic folders, `sitemap.xml`, `robots.txt`) live at the repo root next to `style.css`, the scripts, the icons and `CNAME`. After editing `src/`, run `npm run build` and commit the result. `.nojekyll` stops Jekyll processing. Configure the host to serve directory `index.html` files for clean routes and `404.html` with HTTP status 404 for missing routes. Do not use an SPA catch-all. Select one trailing-slash convention and redirect alternatives; the generated canonical URLs omit trailing slashes except the root. Connect the marketing domain separately from the application. Set HTML revalidation and appropriate caching/compression at the host. HTTPS, hosting, DNS, access logs, and actual policies are deployment responsibilities.
 
 No deployment or production domain change was performed.
 
@@ -35,18 +35,18 @@ No deployment or production domain change was performed.
 - `src/site.mjs`: shared header/footer, homepage sections, interactive demo workspace shell, articles, supporting pages, metadata.
 - `src/content.mjs`: eight distinct search-intent pages.
 - `src/config.mjs`: centralized URL configuration and release validation.
-- `public/style.css`: responsive layout, focus indicators, reduced motion support.
-- `public/site.js`: mobile navigation.
-- `public/demo-data.js`: illustrative collections, documents, questions, answers and source passages for the homepage demo. Edit this file to change the demo content.
-- `public/demo-render.js`: pure render and matching functions, shared by the build (default state, so the demo works before JavaScript loads) and the browser.
-- `public/demo.js`: client behavior for the demo (choose a collection, ask or pick a question, switch sources). No API calls or document upload.
-- `public/favicon.svg`: blue K mark adapted from the application's existing favicon.
-- `public/og.png`: committed 1200 × 630 social card; rebuilding the site does not need image tooling.
+- `style.css`: responsive layout, focus indicators, reduced motion support.
+- `site.js`: mobile navigation.
+- `demo-data.js`: illustrative collections, documents, questions, answers and source passages for the homepage demo. Edit this file to change the demo content.
+- `demo-render.js`: pure render and matching functions, shared by the build (default state, so the demo works before JavaScript loads) and the browser.
+- `demo.js`: client behavior for the demo (choose a collection, ask or pick a question, switch sources). No API calls or document upload.
+- `favicon.svg`: blue K mark adapted from the application's existing favicon.
+- `og.png`: committed 1200 × 630 social card; rebuilding the site does not need image tooling.
 - `scripts/create-og.py`: optional Pillow helper for regenerating the social card; the font paths target macOS.
 - `scripts/build.mjs`: static generation, robots, and sitemap.
 - `scripts/serve.mjs`: local preview server.
 - `tests/site.test.mjs`: generated content integrity tests.
-- `notes/CAPABILITIES.md`: source evidence and positioning boundaries.
+- `docs/CAPABILITIES.md`: source evidence and positioning boundaries.
 
 ## Routes
 

@@ -1,6 +1,6 @@
 import { topics } from './content.mjs';
-import { questions } from '../public/demo-data.js';
-import { renderAnswer, renderPreview, renderScopes, renderStatus, renderSuggestions, renderTabs } from '../public/demo-render.js';
+import { questions } from '../demo-data.js';
+import { renderAnswer, renderPreview, renderScopes, renderStatus, renderSuggestions, renderTabs } from '../demo-render.js';
 export const escape = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const mark = '<span class="brand-mark" aria-hidden="true">K<span></span></span>';
 const brand = `<a class="brand" href="/" aria-label="Knowdexia home">${mark}<span>Knowdexia<span class="brand-dot">.</span></span></a>`;

@@ -17,4 +17,4 @@ d.text((65,416),'Search by meaning. Ask across documents. Verify the source.',fo
 d.line((65,494,1135,494),fill='#dce3ef',width=2)
 for x,label in [(65,'DOCUMENTS'),(350,'KNOWLEDGE'),(660,'ANSWERS'),(960,'SOURCES')]:
     d.text((x,534),label,font=font(19),fill='#315bda')
-image.save(root/'public'/'og.png', optimize=True)
+image.save(root/'og.png', optimize=True)

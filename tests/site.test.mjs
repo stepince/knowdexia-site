@@ -31,7 +31,7 @@ test('internal links, hash targets, assets, and aria control targets resolve',as
       const url=new URL(ref,`https://knowdexia.com${path}`);
       const target=map.get(url.pathname);
       if(target){if(url.hash) assert(target.includes(`id="${url.hash.slice(1)}"`),`${path}: ${ref}`);}
-      else assert((await stat(resolve('public',url.pathname.slice(1)))).isFile(),`${path}: ${ref}`);
+      else assert((await stat(resolve('.',url.pathname.slice(1)))).isFile(),`${path}: ${ref}`);
     }
   }
 });
@@ -45,17 +45,17 @@ test('application URL config is safe, centralized, and release-gated',()=>{
   assert(!home.includes('href="/get-started">Try Knowdexia'));
 });
 test('sitemap includes only public indexable routes and robots points to it',async()=>{
-  const sitemap=await readFile('docs/sitemap.xml','utf8');
+  const sitemap=await readFile('sitemap.xml','utf8');
   for(const {path} of pages){
     if(['/privacy','/terms','/get-started','/404'].includes(path)) assert(!sitemap.includes(`<loc>https://knowdexia.com${path}</loc>`));
     else assert(sitemap.includes(`<loc>https://knowdexia.com${path}</loc>`));
   }
-  assert((await readFile('docs/robots.txt','utf8')).includes('Sitemap: https://knowdexia.com/sitemap.xml'));
+  assert((await readFile('robots.txt','utf8')).includes('Sitemap: https://knowdexia.com/sitemap.xml'));
   for(const path of ['/privacy','/terms','/404','/get-started']) assert(map.get(path).includes('content="noindex, follow"'));
 });
 test('demo data is consistent and matching is scoped',async()=>{
-  const {questions,documents,collections}=await import('../public/demo-data.js');
-  const {matchQuestion,questionsIn,renderAnswer}=await import('../public/demo-render.js');
+  const {questions,documents,collections}=await import('../demo-data.js');
+  const {matchQuestion,questionsIn,renderAnswer}=await import('../demo-render.js');
   const names=new Set(documents.map(d=>d.name));
   for(const q of questions){
     for(const s of q.sources) assert(names.has(s.doc),`${q.id}: unknown document ${s.doc}`);
