@@ -13,7 +13,7 @@ Inspected `/Users/since/projects/knowdexia` on 2026-10-04 before implementing ma
 | Built-in extractive answer | `src/rag/ask-service.ts`, `README.md` | Returns a cited verbatim extract when a supported answer is found |
 | Clickable citations and source highlighting | `public/app.js` Ask source/citation handlers, `public/viewer.js` | Location details vary by document format and extraction |
 | Citation validation | `src/rag/ask-service.ts` `parseCitedAnswer` | Rejects invalid reference numbers and answers with no valid citation; does not establish semantic entailment of every claim |
-| Deferred features | `docs/ARCHITECTURE.md` section 7 | Hosted OAuth/accounts, connectors, agents, GraphRAG, topic/entity extraction are not implemented |
+| Deferred features | `docs/ARCHITECTURE.md` (application repository) section 7 | Hosted OAuth/accounts, connectors, agents, GraphRAG, topic/entity extraction are not implemented |
 
 The production app URL was not found in application configuration or documentation. The website uses the centralized `APP_URL` setting and defaults to an informative local getting-started page.
 

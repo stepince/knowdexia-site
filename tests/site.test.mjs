@@ -45,12 +45,12 @@ test('application URL config is safe, centralized, and release-gated',()=>{
   assert(!home.includes('href="/get-started">Try Knowdexia'));
 });
 test('sitemap includes only public indexable routes and robots points to it',async()=>{
-  const sitemap=await readFile('dist/sitemap.xml','utf8');
+  const sitemap=await readFile('docs/sitemap.xml','utf8');
   for(const {path} of pages){
     if(['/privacy','/terms','/get-started','/404'].includes(path)) assert(!sitemap.includes(`<loc>https://knowdexia.com${path}</loc>`));
     else assert(sitemap.includes(`<loc>https://knowdexia.com${path}</loc>`));
   }
-  assert((await readFile('dist/robots.txt','utf8')).includes('Sitemap: https://knowdexia.com/sitemap.xml'));
+  assert((await readFile('docs/robots.txt','utf8')).includes('Sitemap: https://knowdexia.com/sitemap.xml'));
   for(const path of ['/privacy','/terms','/404','/get-started']) assert(map.get(path).includes('content="noindex, follow"'));
 });
 test('demo data is consistent and matching is scoped',async()=>{

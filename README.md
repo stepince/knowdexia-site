@@ -8,7 +8,7 @@ Requires Node 22+. No dependency installation is needed.
 
 ```sh
 npm run dev       # builds once, then serves http://localhost:4321
-npm run build     # writes deployable files to dist/
+npm run build     # writes the deployable site to docs/ (commit it)
 npm run preview   # serves the existing build
 npm test          # run after building: metadata, internal links/anchors/assets, config, sitemap
 npm run lint      # JavaScript syntax checks (no external linter)
@@ -26,7 +26,7 @@ Copy `.env.example` to `.env`, or supply environment variables when building.
 
 For a release build, use `RELEASE=true npm run build`. It requires an explicit application URL and `LEGAL_APPROVED=true`; the flag alone does not replace the legal draft text. The normal preview build allows unfinished configuration.
 
-Deploy `dist/` to a static host. Configure the host to serve directory `index.html` files for clean routes and `404.html` with HTTP status 404 for missing routes. Do not use an SPA catch-all. Select one trailing-slash convention and redirect alternatives; the generated canonical URLs omit trailing slashes except the root. Connect the marketing domain separately from the application. Set HTML revalidation and appropriate caching/compression at the host. HTTPS, hosting, DNS, access logs, and actual policies are deployment responsibilities.
+The site deploys from `main` with GitHub Pages (Settings → Pages → Deploy from a branch → `main` / `/docs`). `docs/` is generated output: run `npm run build` and commit it before pushing. `public/CNAME` carries the custom domain and `.nojekyll` stops Jekyll processing. To use another static host, deploy `docs/` there. Configure the host to serve directory `index.html` files for clean routes and `404.html` with HTTP status 404 for missing routes. Do not use an SPA catch-all. Select one trailing-slash convention and redirect alternatives; the generated canonical URLs omit trailing slashes except the root. Connect the marketing domain separately from the application. Set HTML revalidation and appropriate caching/compression at the host. HTTPS, hosting, DNS, access logs, and actual policies are deployment responsibilities.
 
 No deployment or production domain change was performed.
 
@@ -46,7 +46,7 @@ No deployment or production domain change was performed.
 - `scripts/build.mjs`: static generation, robots, and sitemap.
 - `scripts/serve.mjs`: local preview server.
 - `tests/site.test.mjs`: generated content integrity tests.
-- `docs/CAPABILITIES.md`: source evidence and positioning boundaries.
+- `notes/CAPABILITIES.md`: source evidence and positioning boundaries.
 
 ## Routes
 
