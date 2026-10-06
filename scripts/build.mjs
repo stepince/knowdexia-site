@@ -16,9 +16,9 @@ for (const page of pages) {
   await mkdir(resolve(target, '..'), {recursive:true});
   await writeFile(target, page.html);
 }
-const indexed = pages.filter(p => !p.noindex && p.path !== '/get-started');
+const indexed = pages.filter(p => !p.noindex && p.path !== '/coming-soon');
 await writeFile(resolve(dist,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${indexed.map(p=>`\n  <url><loc>${config.siteUrl}${p.path}</loc></url>`).join('')}\n</urlset>\n`);
 await writeFile(resolve(dist,'robots.txt'),`User-agent: *\nAllow: /\n\nSitemap: ${config.siteUrl}/sitemap.xml\n`);
 console.log(`Built ${pages.length} pages`);
-if (config.appUrl === '/get-started') console.log('APP_URL is unset. Try Knowdexia points to /get-started.');
+if (config.comingSoon) console.log('APP_URL is unset. Call-to-action buttons read Coming soon and point to /coming-soon.');
 if (!config.legalApproved) console.log('Privacy and terms are marked draft and noindex. Review before launch.');

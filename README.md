@@ -20,11 +20,12 @@ After source edits, rerun `npm run build` and refresh the browser. `PORT` change
 
 Copy `.env.example` to `.env`, or supply environment variables when building.
 
-- `APP_URL`: the real production application URL. It is not known from the application repository. When unset, every **Try Knowdexia** button leads to `/get-started`, which explains current local access; no hosted sign-up is implied. Configure this once to update all CTAs. Only HTTP(S) URLs are accepted.
+- `APP_URL`: the real production application URL. While it is unset, every call-to-action button reads **Coming soon** and leads to `/coming-soon`, which embeds the updates sign-up form. Set it at launch and the buttons become **Try Knowdexia** links to the app. Only HTTP(S) URLs are accepted.
+- `FORM_URL`: share link of the Google Form used for update sign-ups (or edit `DEFAULT_FORM_URL` in `src/config.mjs`). A `docs.google.com/forms/...` link is embedded on `/coming-soon`; any other HTTPS link (such as `forms.gle`) is shown as a button. While empty, the page says sign-up opens soon. HTTPS only.
 - `SITE_URL`: defaults to `https://knowdexia.com`. Used for canonical URLs, social metadata, structured data, sitemap, and robots. Use a dedicated staging origin if needed.
 - `LEGAL_APPROVED`: defaults to false. Privacy and terms are **drafts**, noindexed and excluded from the sitemap. Replace the drafts in `src/site.mjs` with approved content, including the actual operator identity, contact, hosting/logging practices, and applicable terms. Only then set true.
 
-For a release build, use `RELEASE=true npm run build`. It requires an explicit application URL and `LEGAL_APPROVED=true`; the flag alone does not replace the legal draft text. The normal preview build allows unfinished configuration.
+For a release build, use `RELEASE=true npm run build`. It requires `APP_URL` or `FORM_URL`, and `LEGAL_APPROVED=true`; the flag alone does not replace the legal draft text. The normal preview build allows unfinished configuration.
 
 The site deploys from `main` with GitHub Pages (Settings → Pages → Deploy from a branch → `main` / `/ (root)`), like the other Knowdexia-family sites. The generated pages (`index.html`, `404.html`, `about/`, the topic folders, `sitemap.xml`, `robots.txt`) live at the repo root next to `style.css`, the scripts, the icons and `CNAME`. After editing `src/`, run `npm run build` and commit the result. `.nojekyll` stops Jekyll processing. Configure the host to serve directory `index.html` files for clean routes and `404.html` with HTTP status 404 for missing routes. Do not use an SPA catch-all. Select one trailing-slash convention and redirect alternatives; the generated canonical URLs omit trailing slashes except the root. Connect the marketing domain separately from the application. Set HTML revalidation and appropriate caching/compression at the host. HTTPS, hosting, DNS, access logs, and actual policies are deployment responsibilities.
 
@@ -50,7 +51,7 @@ No deployment or production domain change was performed.
 
 ## Routes
 
-`/`, `/semantic-search`, `/ai-knowledge-base`, `/document-search`, `/multi-document-search`, `/knowledge-management`, `/ai-second-brain`, `/rag-document-search`, `/search-across-documents`, `/about`, `/get-started`, `/privacy`, `/terms`, and `404.html`.
+`/`, `/semantic-search`, `/ai-knowledge-base`, `/document-search`, `/multi-document-search`, `/knowledge-management`, `/ai-second-brain`, `/rag-document-search`, `/search-across-documents`, `/about`, `/coming-soon`, `/privacy`, `/terms`, and `404.html`.
 
 Pricing, documentation, and blog are visibly labeled planned in the footer, without dead links or empty SEO pages. Add real routes and footer anchors when substantive content is ready.
 
