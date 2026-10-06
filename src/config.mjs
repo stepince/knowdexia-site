@@ -1,5 +1,5 @@
 // Google Form for the "get updates" sign-up. Paste the form's share link here (or set FORM_URL).
-const DEFAULT_FORM_URL = '';
+const DEFAULT_FORM_URL = 'https://docs.google.com/forms/d/1IxxOfCFWr3ckotXvIX8OR7efvDFTq5GcbiLmV8mh4qo/viewform';
 
 export function readConfig(env = process.env) {
   const site = new URL(env.SITE_URL || 'https://knowdexia.com');

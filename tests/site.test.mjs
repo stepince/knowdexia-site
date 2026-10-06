@@ -76,7 +76,7 @@ test('home page serves the interactive demo, default state included',()=>{
   assert(html.includes('<script type="module" src="/demo.js">'));
 });
 test('coming-soon page embeds the Google Form only when configured',()=>{
-  const none=allPages(readConfig({})).find(p=>p.path==='/coming-soon').html;
+  const none=allPages(readConfig({FORM_URL:''})).find(p=>p.path==='/coming-soon').html;
   assert(!none.includes('<iframe'));
   const form='https://docs.google.com/forms/d/e/abc123/viewform';
   const embedded=allPages(readConfig({FORM_URL:form})).find(p=>p.path==='/coming-soon').html;
