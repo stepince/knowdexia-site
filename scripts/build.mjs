@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { readConfig } from '../src/config.mjs';
-import { allPages } from '../src/site.mjs';
+import { allPages, pageUrl } from '../src/site.mjs';
 const root = fileURLToPath(new URL('..', import.meta.url));
 if (existsSync(resolve(root, '.env'))) process.loadEnvFile(resolve(root, '.env'));
 const config = readConfig();
@@ -17,7 +17,7 @@ for (const page of pages) {
   await writeFile(target, page.html);
 }
 const indexed = pages.filter(p => !p.noindex);
-await writeFile(resolve(dist,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${indexed.map(p=>`\n  <url><loc>${config.siteUrl}${p.path}</loc></url>`).join('')}\n</urlset>\n`);
+await writeFile(resolve(dist,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${indexed.map(p=>`\n  <url><loc>${config.siteUrl}${pageUrl(p.path)}</loc></url>`).join('')}\n</urlset>\n`);
 await writeFile(resolve(dist,'robots.txt'),`User-agent: *\nAllow: /\n\nSitemap: ${config.siteUrl}/sitemap.xml\n`);
 console.log(`Built ${pages.length} pages`);
 if (config.comingSoon) console.log('APP_URL is unset. Call-to-action buttons read Coming soon and point to /coming-soon.');

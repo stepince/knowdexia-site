@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { readConfig } from '../src/config.mjs';
-import { allPages } from '../src/site.mjs';
+import { allPages, pageUrl } from '../src/site.mjs';
 const config=readConfig({});
 const pages=allPages(config);
 const map=new Map(pages.map(p=>[p.path,p.html]));
@@ -16,7 +16,7 @@ test('every page has unique metadata, one h1, and valid structured data',()=>{
     const description=html.match(/name="description" content="([^"]+)"/)[1];
     assert(!titles.has(title));titles.add(title);
     assert(!descriptions.has(description));descriptions.add(description);
-    assert(html.includes(`rel="canonical" href="https://knowdexia.com${path}"`),path);
+    assert(html.includes(`rel="canonical" href="https://knowdexia.com${pageUrl(path)}"`),path);
     assert(html.includes('property="og:image" content="https://knowdexia.com/og.png"'));
     assert.equal(JSON.parse(html.match(/application\/ld\+json">(.*?)<\/script>/s)[1])['@type'],'WebSite');
   }
@@ -29,7 +29,7 @@ test('internal links, hash targets, assets, and aria control targets resolve',as
     for(const ref of attribute(html,/(?:href|src)="([^"]+)"/g)){
       if(!ref.startsWith('/')&&!ref.startsWith('#')) continue;
       const url=new URL(ref,`https://knowdexia.com${path}`);
-      const target=map.get(url.pathname);
+      const target=map.get(url.pathname.replace(/(.)\/$/,'$1'));
       if(target){if(url.hash) assert(target.includes(`id="${url.hash.slice(1)}"`),`${path}: ${ref}`);}
       else assert((await stat(resolve('.',url.pathname.slice(1)))).isFile(),`${path}: ${ref}`);
     }
@@ -44,13 +44,13 @@ test('application URL config is safe, centralized, and release-gated',()=>{
   assert(home.includes('href="https://app.example.test/start?a=1&amp;b=2"'));
   assert(home.includes('Try Knowdexia')&&!home.includes('Coming soon'));
   const soon=map.get('/');
-  assert(soon.includes('href="/coming-soon">Coming soon')&&!soon.includes('Try Knowdexia'));
+  assert(soon.includes('href="/coming-soon/">Coming soon')&&!soon.includes('Try Knowdexia'));
 });
 test('sitemap includes only public indexable routes and robots points to it',async()=>{
   const sitemap=await readFile('sitemap.xml','utf8');
   for(const {path} of pages){
-    if(['/privacy','/terms','/404'].includes(path)) assert(!sitemap.includes(`<loc>https://knowdexia.com${path}</loc>`));
-    else assert(sitemap.includes(`<loc>https://knowdexia.com${path}</loc>`));
+    if(['/privacy','/terms','/404'].includes(path)) assert(!sitemap.includes(`<loc>https://knowdexia.com${pageUrl(path)}</loc>`));
+    else assert(sitemap.includes(`<loc>https://knowdexia.com${pageUrl(path)}</loc>`));
   }
   assert((await readFile('robots.txt','utf8')).includes('Sitemap: https://knowdexia.com/sitemap.xml'));
   for(const path of ['/privacy','/terms','/404']) assert(map.get(path).includes('content="noindex, follow"'));
@@ -85,4 +85,14 @@ test('coming-soon page embeds the Google Form only when configured',()=>{
   assert(!short.includes('<iframe')&&short.includes('href="https://forms.gle/xyz"'));
   assert.throws(()=>readConfig({FORM_URL:'http://example.test/form'}));
   assert(readConfig({RELEASE:'true',LEGAL_APPROVED:'true',FORM_URL:form}).formUrl===form);
+});
+test('internal page links and canonicals use the served trailing-slash form',()=>{
+  for(const {path,html} of pages){
+    for(const ref of attribute(html,/href="(\/[a-z0-9-]+)(?:#[^"]*)?"/g)){
+      assert(!map.has(ref)||ref==='/404',`${path}: ${ref} redirects; link to ${ref}/`);
+    }
+  }
+  assert(map.get('/').includes('href="/about/"'));
+  assert(map.get('/').includes('href="/semantic-search/"'));
+  assert(map.get('/semantic-search').includes('href="/#source-preview"'));
 });
